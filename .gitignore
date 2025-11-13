@@ -1,0 +1,12 @@
+.idea/
+.DS_Store
+.AppleDouble
+.LSOverride
+.Trashes
+
+/bootstrap/compiled.php
+.env.*.php
+.env.*
+/vendor
+/node_modules
+.env
