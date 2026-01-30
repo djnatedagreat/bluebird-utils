@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Mark;
 use App\Path;
 use App\Services\CoreUpgradeService;
 use Illuminate\Console\Scheduling\Schedule;
@@ -15,7 +16,7 @@ class SetPathComplete extends Command
      *
      * @var string
      */
-    protected $signature = 'civi:up:complete {path : the path to mark as complete} {--not : undo a previous completion. Mark as not complete and flag as needing attention. }';
+    protected $signature = 'civi:up:complete {path? : the path to mark as complete} {--mark= : use bookmarked path} {--not : undo a previous completion. Mark as not complete and flag as needing attention. }';
 
     /**
      * The console command description.
@@ -26,14 +27,29 @@ class SetPathComplete extends Command
 
     protected string $path;
     protected bool $not;
+    protected ?string $mark;
 
     /**
      * Execute the console command.
      */
     public function handle(CoreUpgradeService $cus)
     {
-      $this->path = $this->input->getArgument('path');
       $this->not = $this->input->getOption('not');
+      $this->mark = $this->input->getOption('mark') ?? NULL;
+
+        // determine the path depending on --mark option or path argument.s
+        if ($this->mark) {
+            $mark = Mark::where('name', $this->mark)->get()->first();
+            $this->path = $mark->paths()->first()->path;// get marked path
+            $this->info('Using Marked Path: ' . $this->path);
+        } elseif ($this->input->getArgument('path')) {
+            // path is required
+            $this->path = $this->input->getArgument('path');
+            $this->info('Path: ' . $this->path);
+        } else {
+            $this->path = $this->ask('What path?');
+            $this->info('Path: ' . $this->path);
+        }
 
       // Get current working upgrade
       $cw = $cus->getCurrent();
@@ -60,6 +76,18 @@ class SetPathComplete extends Command
       }
       $path->flags = implode(',', $flags);
       $path->save();
+
+      if ($this->mark) {
+          // move mark to next path -- just order by ID for now
+          $next_path = Path::where('id', '>', $path->id)
+              ->where('core_upgrade_id', $cw->id)
+              ->where('flags', 'like', '%attention%')
+              ->orderBy('id', 'asc')
+              ->first();
+
+          $mark->paths()->detach($path);
+          $mark->paths()->attach($next_path);
+      }
     }
 
     /**

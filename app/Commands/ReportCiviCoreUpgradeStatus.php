@@ -84,12 +84,12 @@ class ReportCiviCoreUpgradeStatus extends Command
         //$flags = '';
         if ($this->opt_attention) {
           if (str_contains($p->flags,'attention')) {
-            $html_rows .= "<tr><td>$status</td><td>{$p->path}</td><td>{$p->formattedNotes()}</td></tr>";
+            $html_rows .= "<tr><td>$status</td><td>{$p->path}</td><td>{$p->formattedNotes()}</td><td>{$p->formattedMarks()}</td></tr>";
           } else {
             continue;
           }
         } else {
-          $html_rows .= "<tr><td>$status</td><td>{$p->path}</td><td>{$p->formattedNotes()}</td></tr>";
+          $html_rows .= "<tr><td>$status</td><td>{$p->path}</td><td>{$p->formattedNotes()}</td><td>{$p->formattedMarks()}</td></tr>";
         }
       }
       render(<<<HTML
@@ -102,6 +102,7 @@ class ReportCiviCoreUpgradeStatus extends Command
               <table>
                 <thead>
                     <tr>
+                        <th>Mark</th>
                         <th>Status</th>
                         <th>Path</th>
                         <th>Notes</th>

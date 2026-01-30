@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Mark;
 use App\Services\BluebirdGitService;
 use App\Services\CiviCRMCoreGitService;
 use App\Services\CoreUpgradeService;
@@ -23,7 +24,7 @@ class DoGitPatch extends Command
      *
      * @var string
      */
-    protected $signature = 'civi:up:patch {path?} {--check : only a check. Do not apply it.} {--custom : generate a patch for the related core file and see if it applies to the custom override }';
+    protected $signature = 'civi:up:patch {path?} {--mark= : use bookmarked path} {--check : only a check. Do not apply it.} {--custom : generate a patch for the related core file and see if it applies to the custom override }';
 
     /**
      * The console command description.
@@ -33,6 +34,8 @@ class DoGitPatch extends Command
     protected $description = 'Run git apply to apply a patch to a core file';
 
     protected ?string $path;
+    protected ?string $mark;
+
     protected bool $check_only = false;
     protected bool $custom = false;
     protected $bbgs; // BluebirdGitService
@@ -46,13 +49,26 @@ class DoGitPatch extends Command
      */
     public function handle(PathService $ps, BluebirdGitService $bbgs, CiviCRMCoreGitService $ccgs, CoreUpgradeService $cus)
     {
-      $this->path = $this->input->getArgument('path');
+      $this->path = $this->input->getArgument('path') ?? '';
       $this->check_only = $this->input->getOption('check');
       $this->custom = $this->input->getOption('custom');
       $this->bbgs = $bbgs;
       $this->ps = $ps;
       $this->cus = $cus;
       $this->ccgs = $ccgs;
+
+      $this->mark = $this->input->getOption('mark') ?? NULL;
+
+        // determine the path depending on --mark option or path argument.s
+        if ($this->mark) {
+            $mark = Mark::where('name', $this->mark)->get()->first();
+            $this->path = $mark->paths()->first()->path;// get marked path
+            $this->info('Using Marked Path: ' . $this->path);
+        } elseif ($this->input->getArgument('path')) {
+            // path is required
+            $this->path = $this->input->getArgument('path');
+            $this->info('Path: ' . $this->path);
+        }
 
       if ($this->check_only) {
         $this->info('running with --check. No patches will be applied.');
@@ -177,6 +193,7 @@ class DoGitPatch extends Command
       // allowing either git log of core files or
       // if --custom is passed with a custom path, then the custom path
       // will be translated to it's core path.
+        /* This might be old code that's no longer needed.
       $path_to_check = $this->path;
       if ($this->custom && PathService::isCustomPath($this->path)) {
         $path_to_check = PathService::getCoreRelativePath(PathService::mapBBCustomToCore($this->path));
@@ -188,7 +205,7 @@ class DoGitPatch extends Command
         $this->info('Couldn\'t find the path that you\'re looking for.');
         die();
       }
-
+    */
     }
 
     public function applyCorePatch(\App\CoreMod $mod) : bool {

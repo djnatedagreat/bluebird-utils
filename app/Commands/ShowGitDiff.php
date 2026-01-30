@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Mark;
 use App\Services\CiviCRMCoreGitService;
 use App\Services\PathService;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,7 +17,7 @@ class ShowGitDiff extends Command
      *
      * @var string
      */
-    protected $signature = 'civi:up:diff {path} {--custom : to show the log for an override\'s associated core file}';
+    protected $signature = 'civi:up:diff {path?} {--mark= : use bookmarked path} {--custom : to show the log for an override\'s associated core file}';
 
     /**
      * The console command description.
@@ -27,6 +28,7 @@ class ShowGitDiff extends Command
 
     protected string $path;
     protected bool $custom;
+    protected ?string $mark;
     protected CiviCRMCoreGitService $gs;
 
     /**
@@ -34,8 +36,23 @@ class ShowGitDiff extends Command
      */
     public function handle(PathService $ps, CiviCRMCoreGitService $gs)
     {
-      $this->path = $this->input->getArgument('path');
       $this->custom = $this->input->getOption('custom');
+      $this->mark = $this->input->getOption('mark') ?? NULL;
+
+        // determine the path depending on --mark option or path argument.s
+        if ($this->mark) {
+            $mark = Mark::where('name', $this->mark)->get()->first();
+            $this->path = $mark->paths()->first()->path;// get marked path
+            $this->info('Using Marked Path: ' . $this->path);
+        } elseif ($this->input->getArgument('path')) {
+            // path is required
+            $this->path = $this->input->getArgument('path');
+            $this->info('Path: ' . $this->path);
+        } else {
+            $this->path = $this->ask('What path?');
+            $this->info('Path: ' . $this->path);
+        }
+
       $this->gs = $gs;
       if (! $this->gs->repoDirExists()) {
         $this->info('No local repository found');
