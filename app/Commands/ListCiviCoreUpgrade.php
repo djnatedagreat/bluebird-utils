@@ -35,11 +35,11 @@ class ListCiviCoreUpgrade extends Command
       $html = '<div class="py-1 ml-2">';
       $html .= '<h1>Tracked CiviCRM Core Upgrades</h1>';
       $html .= '<table>';
-      $html .= '<tr><th>Upgrade Name (key)</th><th>From CiviCore Release</th><th>To Release</th></tr>';
+      $html .= '<tr><th>Upgrade Name (key)</th><th>From CiviCore Release</th><th>To Release</th><th>Is Current</th></tr>';
       foreach ($upgrades as $u) {
         $html .= '<tr>';
         $html .= '<td>'.$u->name.' ('.$u->key.')</td>';
-        $html .= '<td>'. $u->civi_prev_version . '</td><td>'.$u->civi_new_version.'</td>';
+        $html .= '<td>'. $u->civi_prev_version . '</td><td>'.$u->civi_new_version.'</td><td>'.$u->current_working   .'</td>';
         $html .= '</tr>';
       }
       $html .= '</table>';
