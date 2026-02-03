@@ -1,0 +1,14 @@
+id: US-###
+title: User can levitate
+civicrm_module: Activities
+bluebird_feature: Levitation
+redmine_issues:
+  - 12345
+
+# What is the risk that this user story will break during an upgrade (High, Normal, Low)
+upgrade_risk_level: Normal
+
+test_case:
+  core_upgrade: true
+  note: something worth noting
+

@@ -1,0 +1,13 @@
+id: US-001
+title: User can add one or more position tags when creating an Activity
+civicrm_module: Activities
+bluebird_feature: Position Tags
+redmine_issues:
+
+# What is the risk that this user story will break during an upgrade (High, Normal, Low)
+upgrade_risk_level: High
+
+test_case:
+  core_upgrade: true
+  note:
+

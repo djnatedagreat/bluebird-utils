@@ -1,0 +1,13 @@
+id: US-003
+title: User can view one or more position tags when viewing an Activity
+civicrm_module: Activities
+bluebird_feature: Position Tags
+redmine_issues:
+
+# What is the risk that this user story will break during an upgrade (High, Normal, Low)
+upgrade_risk_level: High
+
+test_case:
+  core_upgrade: true
+  note: can't add to "create case" activities
+

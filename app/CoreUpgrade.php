@@ -7,8 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CoreUpgrade extends Model
 {
-  public function paths(): HasMany
-  {
+    public function paths(): HasMany
+    {
     return $this->hasMany(Path::class);
-  }
+    }
+
+    public function testCases(): HasMany
+    {
+        return $this->hasMany(CoreUpgradeTestCase::class);
+    }
 }
