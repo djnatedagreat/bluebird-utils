@@ -47,7 +47,7 @@ Where
 * 6.9.0 is the version of CiviCRM Core that we're upgrading to
 * /home/nate/workspace/Bluebird-310/ is the path to the Bluebird codebase that we're upgrading
 
-This will do some analysis and determine what files can be considered "safe" and what files require some 
+This will do some analysis and determine what core and override files can be considered "safe" and what files require some 
 attention.
 
 #### Safe
@@ -58,7 +58,7 @@ Because they haven't changed, we can assume that an override file does not need 
 #### Attention
 
 However, if a core file has been changed since our last upgrade, then we need to update our override
-file and incorporate those chagnes.
+file and incorporate those changes.
 
 Note that Core Modifications always require attention. Core Modifications get removed when we replace the core codebase.
 So, we always have to re-implement those customizations.
