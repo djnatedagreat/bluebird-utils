@@ -38,7 +38,7 @@ class ListUserStories extends Command
         foreach ($stories as $s) {
             $html .= '<tr>';
             $html .= '<td>'. $s['id'] . '</td>';
-            $html .= '<td>'. $s['civicrm_module'] . '</td>';
+            $html .= '<td>'. join(', ', $s['civicrm_modules']) . '</td>';
             $html .= '<td>'. $s['bluebird_feature'] . '</td>';
             $html .= '<td>'. $s['title'] . '</td>';
             $html .= '</tr>';
