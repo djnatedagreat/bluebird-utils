@@ -1,6 +1,7 @@
 id: US-###
 title: User can levitate
-civicrm_module: Activities
+civicrm_modules:
+  - Activities
 bluebird_feature: Levitation
 redmine_issues:
   - 12345

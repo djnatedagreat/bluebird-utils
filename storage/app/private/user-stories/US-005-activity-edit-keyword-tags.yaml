@@ -1,6 +1,7 @@
 id: US-005
 title: User can add one or more keyword tags when editing an Activity
-civicrm_module: Activities
+civicrm_modules:
+  - Activities
 bluebird_feature: Keyword Tags
 redmine_issues:
 

@@ -1,6 +1,7 @@
 id: US-002
 title: User can add one or more position tags when editing an Activity
-civicrm_module: Activities
+civicrm_modules:
+  - Activities
 bluebird_feature: Position Tags
 redmine_issues:
 

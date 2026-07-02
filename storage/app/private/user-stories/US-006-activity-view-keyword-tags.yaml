@@ -1,6 +1,7 @@
 id: US-006
 title: User can view one or more keyword tags when viewing an Activity
-civicrm_module: Activities
+civicrm_modules:
+  - Activities
 bluebird_feature: Keyword Tags
 redmine_issues:
 

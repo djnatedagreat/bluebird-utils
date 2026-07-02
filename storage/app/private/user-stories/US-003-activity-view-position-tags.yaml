@@ -1,6 +1,7 @@
 id: US-003
 title: User can view one or more position tags when viewing an Activity
-civicrm_module: Activities
+civicrm_modules:
+  - Activities
 bluebird_feature: Position Tags
 redmine_issues:
 

@@ -1,0 +1,28 @@
+id: US-008
+title: User can add one or more keyword tags to an Inbound Email Activity while processing and tagging the activity
+civicrm_modules:
+  - Inbound Email
+  - Activities
+bluebird_feature: Inbound Email
+redmine_issues:
+
+# What is the risk that this user story will break during an upgrade (High, Normal, Low)
+upgrade_risk_level: High
+
+test_case:
+  core_upgrade: true
+  note:
+
+  steps:
+    - Navigate to Inbox -> Matched Messages
+    - Choose a row and click Process under Actions
+    - Go to Tag Activity Tab
+    - In the keywords field, start typing to search tags
+    - Select 1 or more keywords
+    - Click Update
+    - Navigate to relevant contact
+    - Click the Activities Tab
+    - View the relevant Inbound Email Activity
+    - Verify that the keyword tag(s) is displayed
+
+
