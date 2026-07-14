@@ -67,6 +67,20 @@ class AddCiviCoreUpgrade extends Command
 
       // Do the git clone... we'll need a local copy of the repo for analysis
       $this->gs->cloneGitRepo();
+
+      // Verify both versions resolve to real refs in the civicrm-core repo
+      // before we write anything, since git tags don't always match the
+      // civi version number exactly (e.g. "6.16" vs "6.16.0").
+      foreach (['prev_version' => $this->prev_version, 'new_version' => $this->new_version] as $label => $version) {
+        if (! $this->gs->refExists($version)) {
+          $this->error("Git ref '{$version}' ({$label}) was not found in the civicrm-core repo.");
+          $suggestions = $this->gs->findSimilarTags($version);
+          if ($suggestions) {
+            $this->error('Did you mean: ' . implode(', ', $suggestions));
+          }
+          return self::FAILURE;
+        }
+      }
       //
       $upgrade_id = 0;
       if (! $this->opt_dryrun) {

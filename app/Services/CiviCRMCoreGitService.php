@@ -49,4 +49,28 @@ class CiviCRMCoreGitService {
     return $this->repo;
   }
 
+  /** Check whether a ref (tag, branch, commit) exists in the repo. */
+  public function refExists(string $ref): bool {
+    if (! $this->repo) {
+      return false;
+    }
+    try {
+      $this->repo->execute('rev-parse', '--verify', '--quiet', $ref . '^{commit}');
+      return true;
+    } catch (\CzProject\GitPhp\GitException $e) {
+      return false;
+    }
+  }
+
+  /** Find existing tags that start with the given version, to help catch typos. */
+  public function findSimilarTags(string $version): array {
+    if (! $this->repo) {
+      return [];
+    }
+    return array_values(array_filter(
+      $this->repo->getTags(),
+      fn($tag) => str_starts_with($tag, $version)
+    ));
+  }
+
 }
